@@ -58,7 +58,7 @@ const CoursesList = ({ schedule } : {schedule: Schedule}) => {
       {coursesList.map(([key, course]) => (
         <tr key={key}>
           <td>
-            {course.term} CS {course.number}: {course.title}
+            {course.term} CS {course.number}: {course.title} ({course.meets})
           </td>
         </tr>
       ))}
