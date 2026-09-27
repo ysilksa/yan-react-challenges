@@ -1,0 +1,1 @@
+In index.html, change the page title to “CS Course Scheduler” and the icon to “/favicon.svg,” where favicon.svg is a favicon appropriate for a course scheduling single page application. Assume favicon.svg is under /public.
