@@ -8,13 +8,17 @@
 body {
   margin: 8px;
   color: #000;
-  font-family: serif;
+  font-family: var(--font-roboto);
 }
 
 h1 {
   margin-block: 0.67em;
   font-size: 2em;
   font-weight: bold;
+}
+
+h2 {
+  font-size: 1.6em;
 }
 
 ul {
