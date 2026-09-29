@@ -1,0 +1,1 @@
+With the skeleton code in /src/components/CoursesList.tsx from the root folder of this project, add Tailwind CSS to the component so that each card looks like a card from /docs/card-ui.png. Ensure that each row fills the available screen width, and course cards may need more than one row if needed. Also, ensure that cards on the same row have uniform height and internal spacing.
