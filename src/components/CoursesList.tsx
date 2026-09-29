@@ -17,12 +17,12 @@ const CoursesList = ({ schedule } : {schedule: Schedule}) => {
   
   const coursesList = Object.entries(schedule.courses); 
   return (
-    <div className = "grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4 px-4">
+    <div className = "font-roboto grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4 px-4">
       {coursesList.map(([key, course]) => (
-        <div key={key} className = "border-2 border-gray-400 rounded-lg">
-          <h2>{course.term} CS {course.number}</h2>
+        <div key={key} className = "border-2 border-gray-400 rounded-lg m-4">
+          <h2 className = "text-lg font-bold">{course.term} CS {course.number}</h2>
           <p>{course.title}</p>
-          <hr/>
+          <hr className = "w-full border-gray-400"/>
           <p>({course.meets})</p>
         </div>
       ))}
