@@ -32,7 +32,6 @@ export function useJsonQuery(url : string) : JsonQueryResult {
       setError(null);
       try {
         const response = await fetch(url);
-        console.log(response);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -42,7 +41,7 @@ export function useJsonQuery(url : string) : JsonQueryResult {
         }
       } catch(error) {
         if (isMounted) {
-            setError(error as Error);
+            setError(error as Error); // only update the state when the component is around
         }
       } finally {
          if (isMounted) {
