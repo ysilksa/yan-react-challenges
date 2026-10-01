@@ -1,16 +1,5 @@
 // use interfaces for TypeScript to define the structure of the data
-interface Schedule {
-  title: string; 
-  courses: Record<string, Course>;
-}
-
-interface Course {
-  term: string;
-  number: string;
-  meets: string;
-  title: string;
-}
-
+import type { Schedule } from "../utilities/fetch";
 
 // const used for "Display courses" task
 const CoursesList = ({ schedule } : {schedule: Schedule}) => {
