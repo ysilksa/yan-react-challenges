@@ -2,9 +2,9 @@
 import type { Schedule } from "../utilities/fetch";
 
 // const used for "Display courses" task
-const CoursesList = ({ schedule } : {schedule: Schedule}) => {
+const CoursesList = ({ schedule, selectedTerm } : {schedule: Schedule, selectedTerm: string}) => {
   
-  const coursesList = Object.entries(schedule.courses); 
+  const coursesList = Object.entries(schedule.courses).filter(([, course]) => course.term === selectedTerm); 
   return (
     <article className = " grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4 px-4 h-full min-h-56">
       {coursesList.map(([key, course]) => (

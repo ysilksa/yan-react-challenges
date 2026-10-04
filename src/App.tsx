@@ -1,5 +1,5 @@
 import './App.css';
-import CoursesList from './components/CoursesList';
+import CoursesPage from './components/CoursesPage.tsx';
 import { useJsonQuery , type Schedules } from './utilities/fetch';
 
 const App = () => {
@@ -14,9 +14,9 @@ const App = () => {
 
   return (
     <main>
-      <h1>{schedule.title}</h1>
+      <h1 className = "px-4">{schedule.title}</h1>
       {/* call the const CoursesList to display the courses in the schedule */}
-      <CoursesList schedule={schedule} />
+      <CoursesPage schedule={schedule} />
     </main>
   );
 }

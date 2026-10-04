@@ -6,9 +6,10 @@ interface TermButtonsProps {
 }
 
 const TermButtons = ({ selected, setSelected }: TermButtonsProps) => (
-  <div className="flex justify-center gap-1">
+  <div className="flex px-4 gap-2">
     {["Fall", "Winter", "Spring"].map(option => (
-      <div key={option}>
+      <div className="flex gap-1" key={option}>
+        <label>{option}</label>
         <input 
           type = "radio"
           id={option} 
