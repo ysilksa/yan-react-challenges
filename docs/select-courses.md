@@ -1,0 +1,3 @@
+When the user clicks on the course card, the course should be added to a list of selected classes and then visually highlighted on the page. The card will be updated with a green border and light green background. Clicking a selected course should unselect it, removing it from the list of selected classes and removing the visual effects, returning it to its original appearance. Users should be able to select and unselect any amount of courses. 
+
+Please update or create any files in /src/components or /src/util or /src/App.tsx that need to be adjusted accordingly. Use best practices, including contrast and accessibility for the colors chosen for the visual highlight. 
