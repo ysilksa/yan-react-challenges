@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Schedule } from '../utilities/fetch';
+import { findTimeConflicts } from '../utilities/findTimeConflicts';
 import CoursesList from './CoursesList.tsx';
 import SchedulePopup from './SchedulePopup.tsx';
 import TermButtons from './TermSelection.tsx';
@@ -16,6 +17,11 @@ const CoursesPage = ({ schedule }: { schedule: Schedule }) => {
         : [...current, key]
     );
   };
+
+  const conflictingCourses = findTimeConflicts({
+    selectedCourses,
+    allCourses: schedule.courses,
+  });
 
   return (
     <div className="space-y-8">
@@ -61,6 +67,7 @@ const CoursesPage = ({ schedule }: { schedule: Schedule }) => {
           selectedTerm={selectedTerm}
           selectedCourses={selectedCourses}
           clickHandler={handleSelect}
+          conflictingCourses={conflictingCourses}
         />
       </section>
 

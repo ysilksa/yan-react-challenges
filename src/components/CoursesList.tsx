@@ -5,6 +5,7 @@ interface CoursesListProps {
   selectedTerm: string;
   selectedCourses: string[];
   clickHandler: (courseKey: string) => void;
+  conflictingCourses: string[];
 }
 
 const CoursesList = ({
@@ -12,6 +13,7 @@ const CoursesList = ({
   selectedTerm,
   selectedCourses,
   clickHandler,
+  conflictingCourses,
 }: CoursesListProps) => {
   const coursesList = Object.entries(schedule.courses).filter(
     ([, course]) => course.term === selectedTerm,
@@ -27,17 +29,25 @@ const CoursesList = ({
         <ul className="grid auto-rows-fr grid-cols-[repeat(auto-fill,minmax(min(100%,250px),1fr))] gap-4">
           {coursesList.map(([key, course]) => {
             const isSelected = selectedCourses.includes(key);
+            const isConflicting = conflictingCourses.includes(key);
 
             return (
               <li key={key}>
                 <button
                   type="button"
                   aria-pressed={isSelected}
-                  onClick={() => clickHandler(key)}
+                  aria-disabled={isConflicting}
+                  onClick={() => {
+                    if (isSelected || !isConflicting) {
+                      clickHandler(key);
+                    }
+                  }}
                   className={`flex h-full min-h-48 w-full flex-col justify-between rounded-2xl border p-5 text-left shadow-sm transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
                     isSelected
                       ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500'
-                      : 'border-slate-200 bg-white hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md'
+                      : isConflicting
+                        ? 'cursor-not-allowed border-slate-300 bg-slate-100 opacity-50 grayscale'
+                        : 'border-slate-200 bg-white hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md'
                   }`}
                 >
                   <span>
