@@ -1,11 +1,12 @@
-import './App.css';
-import CoursesPage from './components/CoursesPage.tsx';
-import { useJsonQuery , type Schedules } from './utilities/fetch';
+import { createRootRoute, Outlet } from '@tanstack/react-router';
+import { ScheduleContext } from '../utilities/ScheduleContext';
+import { useJsonQuery, type Schedules } from '../utilities/fetch';
 
-const App = () => {
+const Root = () => {
   const [json, isLoading, error] = useJsonQuery(
     'https://courses.cs.northwestern.edu/394/guides/data/cs-courses-firestore.php',
   );
+
   if (error) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
@@ -15,13 +16,17 @@ const App = () => {
       </main>
     );
   }
+
   if (isLoading) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
-        <p className="text-slate-600" role="status">Loading courses…</p>
+        <p className="text-slate-600" role="status">
+          Loading courses…
+        </p>
       </main>
     );
   }
+
   if (!json) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
@@ -32,6 +37,7 @@ const App = () => {
 
   const schedules = json as Schedules;
   const schedule = schedules.schedules['CS-2018-2019'];
+
   if (!schedule) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
@@ -43,10 +49,12 @@ const App = () => {
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-6xl px-5 py-10 sm:px-8">
-      <CoursesPage schedule={schedule} />
-    </main>
+    <ScheduleContext.Provider value={schedule}>
+      <Outlet />
+    </ScheduleContext.Provider>
   );
 };
 
-export default App;
+export const Route = createRootRoute({
+  component: Root,
+});

@@ -1,3 +1,5 @@
-On every course card, add a button to an edit form. Upon opening the form, the form should already be populated with the course’s data. On the form, there should be text input fields for the title and meeting times for a course, a “Cancel” button, but not a submit button. However, add an onSubmit() method to handle submitting, but this method should do nothing. When the user clicks the onSubmit() button, the user should just return to the main course list. 
+Each course card has an Edit Course link that opens the TanStack Router route `/courses/$courseId/edit`. The edit form is initialized with that course's title and meeting times. Cancel returns to `/`.
+
+The form intentionally has no submit button and does not save edits. Its `onSubmit` handler prevents the browser's default submission and does nothing; Cancel returns to the course list.
 
 Use forms and routing in React to complete this. Edit or add any corresponding files in /src/components or /src/App.tsx accordingly with best coding practices.
