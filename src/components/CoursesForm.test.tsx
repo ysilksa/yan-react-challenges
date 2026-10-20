@@ -3,20 +3,22 @@ import { describe, expect, it } from 'vitest';
 import CoursesForm from './CoursesForm';
 
 describe('CoursesForm', () => {
-  it('shows a helpful meeting-time error when the form is submitted', async () => {
+  it('shows a helpful meeting-time error while the field is edited', async () => {
     render(
       <CoursesForm
         course={{
           title: 'Algorithms',
           term: 'Fall',
           number: '213',
-          meets: 'MWF',
+          meets: '',
         }}
         onCancel={() => undefined}
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Validate course' }));
+    fireEvent.change(screen.getByLabelText('Course Time'), {
+      target: { value: 'MWF' },
+    });
 
     expect(
       await screen.findByText(

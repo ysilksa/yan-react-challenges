@@ -20,6 +20,7 @@ const CoursesForm = ({ course, onCancel }: CourseFormProps) => {
   } = useForm<CourseFormInput, undefined, CourseData>({
     defaultValues: course,
     resolver: zodResolver(courseSchema),
+    mode: 'onChange',
   });
 
   return (
@@ -109,12 +110,6 @@ const CoursesForm = ({ course, onCancel }: CourseFormProps) => {
         )}
       </div>
 
-      <button
-        type="submit"
-        className="min-h-11 rounded-lg bg-indigo-600 px-4 font-semibold text-white transition hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-      >
-        Validate course
-      </button>
       <button
         type="button"
         onClick={onCancel}
