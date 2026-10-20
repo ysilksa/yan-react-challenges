@@ -5,9 +5,11 @@ import {
   createRouter,
   Link,
   RouterProvider,
+  useNavigate,
 } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import CoursesPage from './components/CoursesPage.tsx';
+import CoursesForm from './components/CoursesForm.tsx';
 import { useJsonQuery, type Schedule, type Schedules } from './utilities/fetch';
 
 const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
@@ -23,6 +25,7 @@ const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
       path: '/courses/$courseId',
       component: () => {
         const { courseId } = courseEditRoute.useParams();
+        const navigate = useNavigate();
         const course = schedule.courses[courseId];
 
         if (!course) {
@@ -38,7 +41,13 @@ const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
           );
         }
 
-        return <CourseEditForm key={courseId} course={course} />;
+        return (
+          <CoursesForm
+            key={courseId}
+            course={course}
+            onCancel={() => void navigate({ to: '/' })}
+          />
+        );
       },
     });
     const routeTree = rootRoute.addChildren([courseListRoute, courseEditRoute]);
