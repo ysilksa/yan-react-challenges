@@ -8,7 +8,6 @@ import {
 } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import CoursesPage from './components/CoursesPage.tsx';
-import CourseEditForm from './components/CourseEditForm.tsx';
 import { useJsonQuery, type Schedule, type Schedules } from './utilities/fetch';
 
 const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
