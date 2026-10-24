@@ -1,5 +1,5 @@
 import { applicationDefault, initializeApp } from 'firebase-admin/app';
-import { doc, getFirestore, setDoc } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 
 const sourceUrl =
   'https://courses.cs.northwestern.edu/394/guides/data/cs-courses-firestore.php';
@@ -54,7 +54,7 @@ for (const [scheduleId, schedule] of Object.entries(data.schedules)) {
     }
   }
 
-  await setDoc(doc(db, 'schedules', scheduleId), {
+  await db.collection('schedules').doc(scheduleId).set({
     title: schedule.title,
     courses: schedule.courses,
   });
