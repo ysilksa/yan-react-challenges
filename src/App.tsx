@@ -10,7 +10,7 @@ import {
 import { useMemo } from 'react';
 import CoursesPage from './components/CoursesPage.tsx';
 import CoursesForm from './components/CoursesForm.tsx';
-import { useJsonQuery, type Schedule, type Schedules } from './utilities/fetch';
+import { useFirestoreSchedule, type Schedule } from './utilities/fetch';
 
 const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
   const router = useMemo(() => {
@@ -59,9 +59,7 @@ const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
 };
 
 const App = () => {
-  const [json, isLoading, error] = useJsonQuery(
-    'https://courses.cs.northwestern.edu/394/guides/data/cs-courses-firestore.php',
-  );
+  const [schedule, isLoading, error] = useFirestoreSchedule('CS-2018-2019');
   if (error) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
@@ -78,22 +76,10 @@ const App = () => {
       </main>
     );
   }
-  if (!json) {
-    return (
-      <main className="mx-auto max-w-6xl px-6 py-16">
-        <p className="text-slate-600">No courses found.</p>
-      </main>
-    );
-  }
-
-  const schedules = json as Schedules;
-  const schedule = schedules.schedules['CS-2018-2019'];
   if (!schedule) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
-        <p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900" role="alert">
-          The course schedule is unavailable.
-        </p>
+        <p className="text-slate-600">The course schedule is unavailable.</p>
       </main>
     );
   }

@@ -1,11 +1,9 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { ScheduleContext } from '../utilities/ScheduleContext';
-import { useJsonQuery, type Schedules } from '../utilities/fetch';
+import { useFirestoreSchedule } from '../utilities/fetch';
 
 const Root = () => {
-  const [json, isLoading, error] = useJsonQuery(
-    'https://courses.cs.northwestern.edu/394/guides/data/cs-courses-firestore.php',
-  );
+  const [schedule, isLoading, error] = useFirestoreSchedule('CS-2018-2019');
 
   if (error) {
     return (
@@ -26,17 +24,6 @@ const Root = () => {
       </main>
     );
   }
-
-  if (!json) {
-    return (
-      <main className="mx-auto max-w-6xl px-6 py-16">
-        <p className="text-slate-600">No courses found.</p>
-      </main>
-    );
-  }
-
-  const schedules = json as Schedules;
-  const schedule = schedules.schedules['CS-2018-2019'];
 
   if (!schedule) {
     return (

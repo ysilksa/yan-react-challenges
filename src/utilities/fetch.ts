@@ -1,64 +1,51 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getSchedule } from '../services/courses';
+import type { Schedule } from '../types/schedule';
 
-export interface Course {
-  term: string;
-  number: string;
-  meets: string;
-  title: string;
-}
+export type { Course, Schedule, Schedules } from '../types/schedule';
 
-export interface Schedule {
-  title: string;
-  courses: Record<string, Course>;
-}
+type ScheduleQueryResult = [Schedule | null, boolean, Error | null];
 
-export interface Schedules {
-  schedules: Record<string, Schedule>;
-}
-
-type JsonQueryResult = [ unknown, boolean, Error | null];
-
-export function useJsonQuery(url : string) : JsonQueryResult {
-  const [data, setData] = useState<unknown>();
+export const useFirestoreSchedule = (scheduleId: string): ScheduleQueryResult => {
+  const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null> (null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    let isMounted = true; 
+    let isCurrent = true;
 
-    const fetchData = async() => {
+    const fetchSchedule = async () => {
       setLoading(true);
-      setData(undefined);
+      setSchedule(null);
       setError(null);
+
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const result = await getSchedule(scheduleId);
+
+        if (isCurrent) {
+          setSchedule(result);
         }
-        const json = await response.json(); 
-        if (isMounted) {
-          setData(json); // only update the state when the component is around
-        }
-      } catch(error) {
-        if (isMounted) {
-            setError(error as Error); // only update the state when the component is around
+      } catch (cause: unknown) {
+        if (isCurrent) {
+          setError(
+            cause instanceof Error
+              ? cause
+              : new Error('An unexpected error occurred while loading courses.'),
+          );
         }
       } finally {
-         if (isMounted) {
-           setLoading(false);
+        if (isCurrent) {
+          setLoading(false);
         }
       }
     };
 
-  fetchData();
+    void fetchSchedule();
 
-  return () => { // cleanup function for useEffect 
-    isMounted = false; 
-  };
-  }, [url]); // this useEffect runs when the url changes 
+    return () => {
+      isCurrent = false;
+    };
+  }, [scheduleId]);
 
-  return [data, loading, error];
-
+  return [schedule, loading, error];
 };
-
-export default useJsonQuery;
