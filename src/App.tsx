@@ -10,9 +10,19 @@ import {
 import { useMemo } from 'react';
 import CoursesPage from './components/CoursesPage.tsx';
 import CoursesForm from './components/CoursesForm.tsx';
-import { useFirestoreSchedule, type Schedule } from './utilities/fetch';
+import {
+  COURSE_SCHEDULE_ID,
+  useFirestoreSchedule,
+  type Schedule,
+} from './utilities/fetch';
 
-const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
+const CourseRouter = ({
+  schedule,
+  refresh,
+}: {
+  schedule: Schedule;
+  refresh: () => void;
+}) => {
   const router = useMemo(() => {
     const rootRoute = createRootRoute();
     const courseListRoute = createRoute({
@@ -45,7 +55,13 @@ const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
           <CoursesForm
             key={courseId}
             course={course}
+            courseId={courseId}
+            scheduleId={COURSE_SCHEDULE_ID}
             onCancel={() => void navigate({ to: '/' })}
+            onSaved={() => {
+              refresh();
+              void navigate({ to: '/' });
+            }}
           />
         );
       },
@@ -59,7 +75,8 @@ const CourseRouter = ({ schedule }: { schedule: Schedule }) => {
 };
 
 const App = () => {
-  const [schedule, isLoading, error] = useFirestoreSchedule('CS-2018-2019');
+  const [schedule, isLoading, error, refresh] =
+    useFirestoreSchedule(COURSE_SCHEDULE_ID);
   if (error) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
@@ -86,7 +103,7 @@ const App = () => {
 
   return (
     <main className="mx-auto min-h-screen max-w-6xl px-5 py-10 sm:px-8">
-      <CourseRouter schedule={schedule} />
+      <CourseRouter schedule={schedule} refresh={refresh} />
     </main>
   );
 };

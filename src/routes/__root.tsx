@@ -1,9 +1,11 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router';
+import { COURSE_SCHEDULE_ID } from '../services/courses';
 import { ScheduleContext } from '../utilities/ScheduleContext';
 import { useFirestoreSchedule } from '../utilities/fetch';
 
 const Root = () => {
-  const [schedule, isLoading, error] = useFirestoreSchedule('CS-2018-2019');
+  const [schedule, isLoading, error, refresh] =
+    useFirestoreSchedule(COURSE_SCHEDULE_ID);
 
   if (error) {
     return (
@@ -36,7 +38,7 @@ const Root = () => {
   }
 
   return (
-    <ScheduleContext.Provider value={schedule}>
+    <ScheduleContext.Provider value={{ schedule, refresh }}>
       <Outlet />
     </ScheduleContext.Provider>
   );

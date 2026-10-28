@@ -1,14 +1,23 @@
 import { createContext, useContext } from 'react';
 import type { Schedule } from './fetch';
 
-export const ScheduleContext = createContext<Schedule | null>(null);
+interface ScheduleContextValue {
+  schedule: Schedule;
+  refresh: () => void;
+}
 
-export const useSchedule = () => {
-  const schedule = useContext(ScheduleContext);
+export const ScheduleContext = createContext<ScheduleContextValue | null>(null);
 
-  if (!schedule) {
+const useScheduleContext = () => {
+  const context = useContext(ScheduleContext);
+
+  if (!context) {
     throw new Error('Schedule is not available.');
   }
 
-  return schedule;
+  return context;
 };
+
+export const useSchedule = () => useScheduleContext().schedule;
+
+export const useRefreshSchedule = () => useScheduleContext().refresh;

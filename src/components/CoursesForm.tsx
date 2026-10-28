@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   courseSchema,
@@ -6,26 +7,53 @@ import {
   type CourseFormInput,
 } from '../types/course';
 import type { Course } from '../utilities/fetch';
+import { updateCourse } from '../services/courses';
 
 interface CourseFormProps {
   course: Course;
+  courseId: string;
+  scheduleId: string;
   onCancel: () => void;
+  onSaved: () => void;
 }
 
-const CoursesForm = ({ course, onCancel }: CourseFormProps) => {
+const CoursesForm = ({
+  course,
+  courseId,
+  scheduleId,
+  onCancel,
+  onSaved,
+}: CourseFormProps) => {
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isValid, isSubmitting },
   } = useForm<CourseFormInput, undefined, CourseData>({
     defaultValues: course,
     resolver: zodResolver(courseSchema),
     mode: 'onChange',
   });
 
+  const onSubmit = async (data: CourseData) => {
+    if (!isDirty || !isValid) {
+      return;
+    }
+
+    setSubmitError(null);
+
+    try {
+      await updateCourse(scheduleId, courseId, data);
+      onSaved();
+    } catch (error: unknown) {
+      console.error('Unable to save course changes.', error);
+      setSubmitError('Unable to save course changes. Please try again.');
+    }
+  };
+
   return (
     <form
-      onSubmit={handleSubmit(() => undefined)}
+      onSubmit={handleSubmit(onSubmit)}
       noValidate
       className="space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
     >
@@ -110,13 +138,28 @@ const CoursesForm = ({ course, onCancel }: CourseFormProps) => {
         )}
       </div>
 
-      <button
-        type="button"
-        onClick={onCancel}
-        className="min-h-11 rounded-lg border border-slate-300 px-4 font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-      >
-        Cancel
-      </button>
+      {submitError && (
+        <p className="text-sm text-red-700" role="alert">
+          {submitError}
+        </p>
+      )}
+
+      <div className="flex gap-3">
+        <button
+          type="submit"
+          disabled={isSubmitting || !isDirty || !isValid}
+          className="min-h-11 rounded-lg bg-indigo-600 px-4 font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="min-h-11 rounded-lg border border-slate-300 px-4 font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 };

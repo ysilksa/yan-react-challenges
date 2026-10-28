@@ -1,15 +1,24 @@
-import { useEffect, useState } from 'react';
-import { getSchedule } from '../services/courses';
+import { useCallback, useEffect, useState } from 'react';
+import { COURSE_SCHEDULE_ID, getSchedule } from '../services/courses';
 import type { Schedule } from '../types/schedule';
 
 export type { Course, Schedule, Schedules } from '../types/schedule';
 
-type ScheduleQueryResult = [Schedule | null, boolean, Error | null];
+type ScheduleQueryResult = [
+  Schedule | null,
+  boolean,
+  Error | null,
+  () => void,
+];
 
 export const useFirestoreSchedule = (scheduleId: string): ScheduleQueryResult => {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const refresh = useCallback(() => {
+    setRefreshCount((count) => count + 1);
+  }, []);
 
   useEffect(() => {
     let isCurrent = true;
@@ -45,7 +54,9 @@ export const useFirestoreSchedule = (scheduleId: string): ScheduleQueryResult =>
     return () => {
       isCurrent = false;
     };
-  }, [scheduleId]);
+  }, [scheduleId, refreshCount]);
 
-  return [schedule, loading, error];
+  return [schedule, loading, error, refresh];
 };
+
+export { COURSE_SCHEDULE_ID };

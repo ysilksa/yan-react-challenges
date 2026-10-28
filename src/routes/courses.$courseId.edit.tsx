@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import CoursesForm from '../components/CoursesForm';
-import { useSchedule } from '../utilities/ScheduleContext';
+import { COURSE_SCHEDULE_ID } from '../services/courses';
+import { useRefreshSchedule, useSchedule } from '../utilities/ScheduleContext';
 
 const EditCourse = () => {
   const { courseId } = Route.useParams();
   const schedule = useSchedule();
+  const refresh = useRefreshSchedule();
   const navigate = useNavigate();
   const course = schedule.courses[courseId];
 
@@ -32,7 +34,16 @@ const EditCourse = () => {
             Edit Course
           </h1>
         </header>
-        <CoursesForm course={course} onCancel={() => void navigate({ to: '/' })} />
+        <CoursesForm
+          course={course}
+          courseId={courseId}
+          scheduleId={COURSE_SCHEDULE_ID}
+          onCancel={() => void navigate({ to: '/' })}
+          onSaved={() => {
+            refresh();
+            void navigate({ to: '/' });
+          }}
+        />
       </section>
     </main>
   );

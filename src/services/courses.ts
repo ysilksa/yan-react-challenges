@@ -1,6 +1,8 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, FieldPath, getDoc, updateDoc } from 'firebase/firestore';
 import type { Course, Schedule } from '../types/schedule';
 import { getFirebaseDb } from './firebase';
+
+export const COURSE_SCHEDULE_ID = 'CS-2018-2019';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -49,4 +51,18 @@ export const getSchedule = async (scheduleId: string): Promise<Schedule | null> 
 
   const data: unknown = scheduleSnapshot.data();
   return parseSchedule(data);
+};
+
+export const updateCourse = async (
+  scheduleId: string,
+  courseId: string,
+  course: Course,
+): Promise<void> => {
+  const scheduleRef = doc(getFirebaseDb(), 'schedules', scheduleId);
+
+  await updateDoc(
+    scheduleRef,
+    new FieldPath('courses', courseId),
+    course,
+  );
 };
