@@ -1,5 +1,6 @@
 import type { Schedule } from '../utilities/fetch';
 import { Link } from '@tanstack/react-router';
+import { useAuth } from '../utilities/AuthContext';
 
 interface CoursesListProps {
   schedule: Schedule;
@@ -16,6 +17,7 @@ const CoursesList = ({
   clickHandler,
   conflictingCourses,
 }: CoursesListProps) => {
+  const { user } = useAuth();
   const coursesList = Object.entries(schedule.courses).filter(
     ([, course]) => course.term === selectedTerm,
   );
@@ -79,14 +81,16 @@ const CoursesList = ({
                       <span>{course.meets || 'Meeting time not listed'}</span>
                     </span>
                   </button>
-                  <Link
-                    to="/courses/$courseId/edit"
-                    params={{ courseId: key }}
-                    aria-label={`Edit ${course.title}`}
-                    className="min-h-11 border-t border-slate-200 px-5 py-3 text-left text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600"
-                  >
-                    Edit Course
-                  </Link>
+                  {user && (
+                    <Link
+                      to="/courses/$courseId/edit"
+                      params={{ courseId: key }}
+                      aria-label={`Edit ${course.title}`}
+                      className="min-h-11 border-t border-slate-200 px-5 py-3 text-left text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600"
+                    >
+                      Edit Course
+                    </Link>
+                  )}
                 </article>
               </li>
             );

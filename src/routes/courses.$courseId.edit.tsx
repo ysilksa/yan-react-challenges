@@ -1,14 +1,42 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import CoursesForm from '../components/CoursesForm';
 import { COURSE_SCHEDULE_ID } from '../services/courses';
+import { useAuth } from '../utilities/AuthContext';
 import { useRefreshSchedule, useSchedule } from '../utilities/ScheduleContext';
 
 const EditCourse = () => {
   const { courseId } = Route.useParams();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const schedule = useSchedule();
   const refresh = useRefreshSchedule();
   const navigate = useNavigate();
   const course = schedule.courses[courseId];
+
+  if (isAuthLoading) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-16">
+        <p className="text-slate-600" role="status">
+          Checking sign-in status…
+        </p>
+      </main>
+    );
+  }
+
+  if (!user) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-16">
+        <p
+          className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900"
+          role="alert"
+        >
+          Sign in to edit course information.
+        </p>
+        <Link className="mt-4 inline-block font-semibold text-indigo-700 underline" to="/">
+          Return to courses
+        </Link>
+      </main>
+    );
+  }
 
   if (!course) {
     return (
