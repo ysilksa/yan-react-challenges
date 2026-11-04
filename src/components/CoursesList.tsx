@@ -17,7 +17,7 @@ const CoursesList = ({
   clickHandler,
   conflictingCourses,
 }: CoursesListProps) => {
-  const { user } = useAuth();
+  const { isAdmin } = useAuth();
   const coursesList = Object.entries(schedule.courses).filter(
     ([, course]) => course.term === selectedTerm,
   );
@@ -81,7 +81,7 @@ const CoursesList = ({
                       <span>{course.meets || 'Meeting time not listed'}</span>
                     </span>
                   </button>
-                  {user && (
+                  {isAdmin && (
                     <Link
                       to="/courses/$courseId/edit"
                       params={{ courseId: key }}

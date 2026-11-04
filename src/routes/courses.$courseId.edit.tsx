@@ -6,17 +6,17 @@ import { useRefreshSchedule, useSchedule } from '../utilities/ScheduleContext';
 
 const EditCourse = () => {
   const { courseId } = Route.useParams();
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isAdmin, isLoading, authError } = useAuth();
   const schedule = useSchedule();
   const refresh = useRefreshSchedule();
   const navigate = useNavigate();
   const course = schedule.courses[courseId];
 
-  if (isAuthLoading) {
+  if (isLoading) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
         <p className="text-slate-600" role="status">
-          Checking sign-in status…
+          Checking administrator access…
         </p>
       </main>
     );
@@ -30,6 +30,22 @@ const EditCourse = () => {
           role="alert"
         >
           Sign in to edit course information.
+        </p>
+        <Link className="mt-4 inline-block font-semibold text-indigo-700 underline" to="/">
+          Return to courses
+        </Link>
+      </main>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-16">
+        <p
+          className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900"
+          role="alert"
+        >
+          {authError ?? 'Only administrators can edit course information.'}
         </p>
         <Link className="mt-4 inline-block font-semibold text-indigo-700 underline" to="/">
           Return to courses
